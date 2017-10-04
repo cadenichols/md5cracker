@@ -3,19 +3,32 @@ import java.util.Arrays;
 public class BruteForce {
     private char[] word;
     private String pattern;
+    
+    /*  String pattern symbols:
+     *  'd' : digit (0-9)
+     *  'a' : letter (a-z,A-Z)
+     *  'L' : uppercase letter (A-Z)
+     *  'l' : lowercase letter (a-z)
+     *  'v' : vowel (aeiou)
+     *  '*' : wildcard - (almost) all legal ascii characters
+     */
+    private final char DIGIT_SYMBOL = 'd';
+    private final char LETTER_SYMBOL = 'a';
+    private final char UPPERCASE_SYMBOL = 'L';
+    private final char LOWERCASE_SYMBOL = 'l';
+    private final char VOWEL_SYMBOL = 'v';
+    private final char WILDCARD_SYMBOL = '*';
 
     /* These are possible character set constants: */
     private final String DIGITS = generateAllDigits();
     private final String LETTERS = generateAllLetters();
     private final String UPPERCASE_LETTERS = generateAllUpperCaseLetters();
     private final String LOWERCASE_LETTERS = generateAllLowerCaseLetters();
-    private final String VOWELS = generateAllVowels();
+    private final String VOWELS = generateAllVowels(); // lower case only
     private final String ALL_CHARS = generateAllChars();
     
-    public BruteForce() {
-        init(0);
-    }
-
+    public BruteForce() {}      
+    
     public BruteForce(int length) {
         init(length);
     }
@@ -27,20 +40,11 @@ public class BruteForce {
     public void init(int length) {
         // default to using only lowercase letters
         char[] patternChars = new char[length];
-        Arrays.fill(patternChars, 'l');
+        Arrays.fill(patternChars, LOWERCASE_SYMBOL);
         init(new String(patternChars));
     }
-    
-    public void init(String pattern) {
-        /*  String pattern symbols:
-         *  'd' : digit (0-9)
-         *  'a' : letter (a-z,A-Z)
-         *  'L' : uppercase letter (A-Z)
-         *  'l' : lowercase letter (a-z)
-         *  'v' : vowel (aeiou)
-         *  '*' : all legal ascii characters
-         */
-        
+
+    public void init(String pattern) {        
         int length = pattern.length();
         this.pattern = pattern;
         word = new char[length];
@@ -58,16 +62,16 @@ public class BruteForce {
     
     public boolean increment(int index) {
         if (index < 0) return false;
-
+        
         String possibleChars = getPossibleChars(pattern.charAt(index));
-        char firstChar = possibleChars.charAt(0);
-        char lastChar = possibleChars.charAt(possibleChars.length() - 1);
-
-        if (word[index] != lastChar) {
-            word[index]++;
+        char thisChar = word[index];
+        int indexInPossible = possibleChars.indexOf(thisChar);
+        
+        if (indexInPossible < possibleChars.length() - 1) {
+            word[index] = possibleChars.charAt(indexInPossible + 1);
             return false;
         } else {
-            word[index] = firstChar;
+            word[index] = possibleChars.charAt(0);            
             return true;
         }
     }
@@ -85,15 +89,15 @@ public class BruteForce {
         return Arrays.equals(word, last);
     }
     
-    public String getPossibleChars(char symbol) {
+    public String getPossibleChars(char symbol) throws Shade {
         switch (symbol) {
-            case 'd': return DIGITS;
-            case 'a': return LETTERS;
-            case 'L': return UPPERCASE_LETTERS;
-            case 'l': return LOWERCASE_LETTERS;
-            case 'v': return VOWELS;
-            case '*': return ALL_CHARS;
-            default: return "";
+            case DIGIT_SYMBOL: return DIGITS;
+            case LETTER_SYMBOL: return LETTERS;
+            case UPPERCASE_SYMBOL: return UPPERCASE_LETTERS;
+            case LOWERCASE_SYMBOL: return LOWERCASE_LETTERS;
+            case VOWEL_SYMBOL: return VOWELS;
+            case WILDCARD_SYMBOL: return ALL_CHARS;
+            default: throw new Shade("Pattern symbol not allowed: " + symbol);
         }
     }
 
@@ -113,7 +117,6 @@ public class BruteForce {
      * all characters that exist in their set.
      * 
      */
-   
     public static String generateAllDigits() {
         String result = "";
         for (int i = 0; i <= 9; i++) {

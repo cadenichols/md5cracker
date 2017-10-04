@@ -27,6 +27,7 @@ comment4.params=length
 comment4.target=void\ init(int)
 comment5.params=pattern
 comment5.target=void\ init(java.lang.String)
+comment5.text=\ \ String\ pattern\ symbols\:\n\ \ 'd'\ \:\ digit\ (0-9)\n\ \ 'a'\ \:\ letter\ (a-z,A-Z)\n\ \ 'L'\ \:\ uppercase\ letter\ (A-Z)\n\ \ 'l'\ \:\ lowercase\ letter\ (a-z)\n\ \ 'v'\ \:\ vowel\ (aeiou)\n\ \ '*'\ \:\ wildcard\ -\ (almost)\ all\ legal\ ascii\ characters\n
 comment6.params=
 comment6.target=void\ increment()
 comment7.params=index
